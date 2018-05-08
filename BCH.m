@@ -9,21 +9,33 @@ msg = gf(GEN(k)); % wygenerowanie wiadomoœci
 % zakodowanie BCH
 code = bchenc(msg, n, k);
 
-% przepuszczenie przez kana³
-noisy_code = KANALPP(code.x, 0.1);
+for i = 1 : 100
+    % przepuszczenie przez kana³
+    noisy_code = KANALPP(code.x, 0.01 * i);
 
-% zdekodowanie
-[decoded_message, err, ccode] = bchdec(gf(noisy_code), n, k);
+    % zdekodowanie
+    [decoded_message, err, ccode] = bchdec(gf(noisy_code), n, k);
 
-disp(msg.x);
-disp(decoded_message.x);
+    disp(msg.x);
+    disp(decoded_message.x);
 
-wrong_bits = numel(find(msg.x ~= decoded_message.x)); % liczba bitów danych odebranych b³êdnie
-correct_bits = numel(find(msg.x == decoded_message.x)); % liczba bitów danych odebranych prawid³owo
-received_data_bits = length(decoded_message.x); % liczba odebranych bitów danych
-all_received_bits = length(code); % liczba wszystkich odebranych bitów 
+    wrong_bits = numel(find(msg.x ~= decoded_message.x)); % liczba bitów danych odebranych b³êdnie
+    correct_bits = numel(find(msg.x == decoded_message.x)); % liczba bitów danych odebranych prawid³owo
+    received_data_bits = length(decoded_message.x); % liczba odebranych bitów danych
+    all_received_bits = length(code); % liczba wszystkich odebranych bitów 
 
-BER = wrong_bits / received_data_bits; % wyliczenie BER: (liczba bitów danych odebranych b³êdnie) / (liczba odebranych bitów danych)
-E = correct_bits / all_received_bits; % wyliczenie E: (liczba prawid³owo odebranych bitów danych) / (liczba przes³anych bitów)
-disp(BER);
-disp(E);
+    BER_values(i) = wrong_bits / received_data_bits; % wyliczenie BER: (liczba bitów danych odebranych b³êdnie) / (liczba odebranych bitów danych)
+    E_values(i) = correct_bits / all_received_bits; % wyliczenie E: (liczba prawid³owo odebranych bitów danych) / (liczba przes³anych bitów)
+end
+
+figure(1);
+plot(BER_values);
+title(['n: ' num2str(n) '    k: ' num2str(k)]);
+xlabel("Prawdopodobienstwo przeklamania");
+ylabel("BER");
+
+figure(2);
+plot(E_values);
+title(['n: ' num2str(n) '    k: ' num2str(k)]);
+xlabel("Prawdopodobienstwo przeklamania");
+ylabel("E");
