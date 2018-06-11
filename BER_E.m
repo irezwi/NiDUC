@@ -24,7 +24,7 @@ all_received_bits_sigma_sum = 0;
 
 for i = 1 : length(k)
     
-    msg = gf(GEN(k(i))); % wygenerowanie wiadomoúci 
+    msg = gf(GEN(k(i))); % wygenerowanie wiadomo≈õci 
 
     code = bchenc(msg, n(x), k(i));  % zakodowanie BCH
 
@@ -54,11 +54,13 @@ for i = 1 : length(k)
 
     wrong_bits_sigma = numel(find(msg.x ~= decoded_message_sigma.x)); 
     correct_bits_sigma = numel(find(msg.x == decoded_message_sigma.x)); 
-    received_data_bits_sigma = length(decoded_message_sigma.x); 
+    received_data_bits_sigma = length(decoded_message_sigma.x);
+    all_received_bits = length(code);
     
     wrong_bits_sigma_sum = wrong_bits_sigma_sum + wrong_bits_sigma;
     correct_bits_sigma_sum = correct_bits_sigma_sum + correct_bits_sigma;
     received_data_bits_sigma_sum = received_data_bits_sigma_sum + received_data_bits_sigma;
+    all_received_bits_sigma_sum = all_received_bits_sigma_sum + all_received_bits;
     
     end
     
@@ -70,12 +72,13 @@ for i = 1 : length(k)
     wrong_bits_sigma_average = wrong_bits_sigma_sum / N;
     correct_bits_sigma_average = correct_bits_sigma_sum / N;
     recevied_data_bits_sigma_average = received_data_bits_sigma_sum / N;
+    all_received_bits_sigma_average = all_received_bits_sigma_sum / N;
     
     BER_values(i) = wrong_bits_average / recevied_data_bits_average; 
     E_values(i) = correct_bits_average / all_received_bits_average; 
     
     BER_values_sigma(i) = wrong_bits_sigma_average / recevied_data_bits_sigma_average; 
-    E_values_sigma(i) = correct_bits_sigma_average / all_received_bits_average;
+    E_values_sigma(i) = correct_bits_sigma_average / all_received_bits_sigma_average;
     
     if(i == 1)
         x = 2;
@@ -102,7 +105,7 @@ end
 hold on
 xlabel('E');
 ylabel('BER');
-title('PrawdopodobieÒstwo przek≥amania');
+title('Prawdopodobie≈Ñstwo przek≈Çamania');
 
 figure(2);
 %plot();
@@ -117,7 +120,7 @@ title('Sigma');
 
 %------------------------ Drukuj punkty --------------------------%
 
-fprintf('PrawdopodobieÒstwo przek≥amania\n\n');
+fprintf('Prawdopodobie≈Ñstwo przek≈Çamania\n\n');
 
 for i = 1 : length(k)
    fprintf(['E = ', num2str(E_values(i)), '; BER = ', num2str(BER_values(i)), '\n']); 
